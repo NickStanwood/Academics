@@ -1,0 +1,449 @@
+******************************************************************************
+                  TI ARM Linker PC v5.1.1                      
+******************************************************************************
+>> Linked Fri Nov 25 15:28:17 2016
+
+OUTPUT FILE NAME:   <Train_Controller.out>
+ENTRY POINT SYMBOL: "_c_int00"  address: 000041c9
+
+
+MEMORY CONFIGURATION
+
+         name            origin    length      used     unused   attr    fill
+----------------------  --------  ---------  --------  --------  ----  --------
+  FLASH                 00000000   00080000  00004728  0007b8d8  R  X
+  SRAM                  20000000   00018000  0000cfe8  0000b018  RW X
+
+
+SEGMENT ALLOCATION MAP
+
+run origin  load origin   length   init length attrs members
+----------  ----------- ---------- ----------- ----- -------
+00000000    00000000    00004728   00004728    r-x
+  00000000    00000000    0000011c   0000011c    r-- .intvecs
+  0000011c    0000011c    0000293c   0000293c    r-- .const
+  00002a58    00002a58    00001810   00001810    r-x .text
+  00004268    00004268    000004c0   000004c0    r-- .cinit
+20000000    20000000    0000cfe8   00000000    rw-
+  20000000    20000000    0000c304   00000000    rw- .bss
+  2000c304    2000c304    00000800   00000000    rw- .stack
+  2000cb04    2000cb04    000004e4   00000000    rw- .data
+
+
+SECTION ALLOCATION MAP
+
+ output                                  attributes/
+section   page    origin      length       input sections
+--------  ----  ----------  ----------   ----------------
+.intvecs   0    00000000    0000011c     
+                  00000000    0000011c     lm3s9d92_startup_ccs.obj (.intvecs)
+
+.init_array 
+*          0    00000000    00000000     UNINITIALIZED
+
+.const     0    0000011c    0000293c     
+                  0000011c    000023ee     train_layout.obj (.const:.string)
+                  0000250a    00000002     --HOLE-- [fill = 0]
+                  0000250c    0000019e     debugger.obj (.const:.string)
+                  000026aa    00000002     --HOLE-- [fill = 0]
+                  000026ac    00000174     train_display.obj (.const:.string)
+                  00002820    00000100     UART.obj (.const:.string:$P$T0$1)
+                  00002920    000000c0     train_display.obj (.const:sensors)
+                  000029e0    00000027     train_display.obj (.const:$P$T0$1)
+                  00002a07    00000001     --HOLE-- [fill = 0]
+                  00002a08    00000024     gpiof.obj (.const)
+                  00002a2c    00000014     gpioe.obj (.const)
+                  00002a40    0000000f     kernelcalls.obj (.const:.string)
+                  00002a4f    00000001     --HOLE-- [fill = 0]
+                  00002a50    00000008     sysctl.obj (.const)
+
+.text      0    00002a58    00001810     
+                  00002a58    0000048c     train_display.obj (.text)
+                  00002ee4    000003b4     kernelcalls.obj (.text)
+                  00003298    00000280     train_control.obj (.text)
+                  00003518    00000224     kernel.obj (.text)
+                  0000373c    000001cc     msg_queue.obj (.text)
+                  00003908    000001a4     UART.obj (.text)
+                  00003aac    0000013c     spi.obj (.text)
+                  00003be8    0000011c     intr_handlers.obj (.text)
+                  00003d04    00000104     mem_manager.obj (.text)
+                  00003e08    000000b2     processcalls.obj (.text)
+                  00003eba    0000009c     rtsv7M3_T_le_eabi.lib : memcpy_t2.obj (.text)
+                  00003f56    00000002     --HOLE-- [fill = 0]
+                  00003f58    00000094                           : auto_init.obj (.text)
+                  00003fec    00000080     Systick.obj (.text)
+                  0000406c    00000074     gpiof.obj (.text)
+                  000040e0    0000005e     rtsv7M3_T_le_eabi.lib : copy_decompress_rle.obj (.text)
+                  0000413e    00000002     --HOLE-- [fill = 0]
+                  00004140    00000044                           : cpy_tbl.obj (.text)
+                  00004184    00000044                           : exit.obj (.text)
+                  000041c8    00000034                           : boot.obj (.text)
+                  000041fc    00000018                           : args_main.obj (.text)
+                  00004214    00000014                           : _lock.obj (.text)
+                  00004228    00000012                           : copy_zero_init.obj (.text:decompress:ZI)
+                  0000423a    0000000e                           : copy_decompress_none.obj (.text:decompress:none)
+                  00004248    0000000e     main.obj (.text)
+                  00004256    0000000c     lm3s9d92_startup_ccs.obj (.text)
+                  00004262    00000006     rtsv7M3_T_le_eabi.lib : copy_decompress_rle.obj (.text:decompress:rle24)
+
+.cinit     0    00004268    000004c0     
+                  00004268    00000495     (.cinit..data.load) [load image, compression = rle]
+                  000046fd    00000003     --HOLE-- [fill = 0]
+                  00004700    0000000c     (__TI_handler_table)
+                  0000470c    00000004     --HOLE-- [fill = 0]
+                  00004710    00000008     (.cinit..bss.load) [load image, compression = zero_init]
+                  00004718    00000010     (__TI_cinit_table)
+
+.bss       0    20000000    0000c304     UNINITIALIZED
+                  20000000    0000b360     msg_queue.obj (.bss:socket_list)
+                  2000b360    00000ba0     mem_manager.obj (.bss:heap)
+                  2000bf00    00000400     UART.obj (.bss:out_queue)
+                  2000c300    00000004     (.common:running)
+
+.stack     0    2000c304    00000800     UNINITIALIZED
+                  2000c304    00000800     --HOLE--
+
+.data      0    2000cb04    000004e4     UNINITIALIZED
+                  2000cb04    00000264     debugger.obj (.data:diagnostics)
+                  2000cd68    000000c8     train_layout.obj (.data:layout)
+                  2000ce30    00000080     train_control.obj (.data:sections)
+                  2000ceb0    00000058     debugger.obj (.data:debug_console)
+                  2000cf08    00000048     train_display.obj (.data:switches)
+                  2000cf50    0000002c     intr_handlers.obj (.data:kcall_list)
+                  2000cf7c    00000020     train_control.obj (.data)
+                  2000cf9c    0000001c     kernel.obj (.data)
+                  2000cfb8    00000010     UART.obj (.data)
+                  2000cfc8    00000008     debugger.obj (.data)
+                  2000cfd0    00000008     rtsv7M3_T_le_eabi.lib : _lock.obj (.data)
+                  2000cfd8    00000008                           : exit.obj (.data)
+                  2000cfe0    00000004     Systick.obj (.data)
+                  2000cfe4    00000004     rtsv7M3_T_le_eabi.lib : stkdepth_vars.obj (.data)
+
+
+LINKER GENERATED COPY TABLES
+
+__TI_cinit_table @ 00004718 records: 2, size/record: 8, table size: 16
+	.data: load addr=00004268, load size=00000495 bytes, run addr=2000cb04, run size=000004e4 bytes, compression=rle
+	.bss: load addr=00004710, load size=00000008 bytes, run addr=20000000, run size=0000c304 bytes, compression=zero_init
+
+
+LINKER GENERATED HANDLER TABLE
+
+__TI_handler_table @ 00004700 records: 3, size/record: 4, table size: 12
+	index: 0, handler: __TI_decompress_rle24
+	index: 1, handler: __TI_decompress_none
+	index: 2, handler: __TI_zero_init
+
+
+GLOBAL SYMBOLS: SORTED ALPHABETICALLY BY Name 
+
+address    name
+--------   ----
+00004185   C$$EXIT
+00003ca3   GPIOPortF_IntHandler
+00003a4d   IntEnable
+000036fb   Kernel_Initialization
+0000324f   Kgetid
+000031e7   Kinit
+0000319f   Knice
+00003175   Kprint
+00003153   Krun
+0000312b   Kterminate
+2000cfb0   PID_count
+00002a34   PORTE_GPIOAFSEL_R
+00002a38   PORTE_GPIODEN_R
+00002a30   PORTE_GPIODIR_R
+00002a2c   PORTE_GPIODR_R
+00002a3c   PORTE_GPIOPCTL_R
+00002a20   PORTF_GPIOAFSEL_R
+00002a24   PORTF_GPIODEN_R
+00002a0c   PORTF_GPIODIR_R
+00002a08   PORTF_GPIODR_R
+00002a1c   PORTF_GPIOICR_R
+00002a14   PORTF_GPIOIEV_R
+00002a18   PORTF_GPIOIM_R
+00002a10   PORTF_GPIOIS_R
+00002a28   PORTF_GPIOPCTL_R
+0000406d   PORTF_Init
+00003c89   PendSV
+00004257   ResetISR
+UNDEFED    SHT$$INIT_ARRAY$$Base
+UNDEFED    SHT$$INIT_ARRAY$$Limit
+00003bb9   SPIDataReceive
+00003b89   SPIDataTransmit
+00003ab7   SPI_Init
+00003c79   SVCHandler
+00003c3f   SVCall
+00002a50   SYSCTL_RCGC1_R
+00002a54   SYSCTL_RCGC2_R
+000039ed   SetupPIOSC
+00003c1d   SysTickHandler
+00003ff5   SysTickIntDisable
+00004057   SysTickIntEnable
+00003fed   SysTickPeriod
+00004003   SysTickStart
+00004049   SysTickStop
+2000cfe0   ToD
+000039fd   UART0_Init
+00003a65   UART0_IntEnable
+00003be9   UART0_IntHandler
+00003a71   UART_full_init
+00003aad   WaitSPIBusy
+2000cb04   __STACK_END
+00000800   __STACK_SIZE
+2000c504   __STACK_TOP
+00004718   __TI_CINIT_Base
+00004728   __TI_CINIT_Limit
+00004700   __TI_Handler_Table_Base
+0000470c   __TI_Handler_Table_Limit
+00000001   __TI_args_main
+00003f59   __TI_auto_init
+2000cfd8   __TI_cleanup_ptr
+0000423b   __TI_decompress_none
+00004263   __TI_decompress_rle24
+2000cfdc   __TI_dtors_ptr
+00000000   __TI_static_base__
+00004229   __TI_zero_init
+00003ebb   __aeabi_memcpy
+00003ebb   __aeabi_memcpy4
+00003ebb   __aeabi_memcpy8
+ffffffff   __binit__
+ffffffff   __c_args__
+2000c304   __stack
+000041fd   _args_main
+000041c9   _c_int00
+2000cfd0   _lock
+00004223   _nop
+0000421b   _register_lock
+00004215   _register_unlock
+2000cfd4   _unlock
+00004189   abort
+00003d99   allocate
+000036ef   assignR7
+000038e3   bind
+ffffffff   binit
+00004141   copy_in
+0000363b   create_proc
+2000cfb4   cur_priority
+2000cfcc   d_col
+2000cfc8   d_row
+00003d75   deallocate
+2000ceb0   debug_console
+00004025   delay
+0000361b   dequeue_pcb
+000039cf   dequeue_uart_out
+2000cb04   diagnostics
+00002ca1   display_controller
+2000cf7c   empty_sections
+000035f9   enqueue_pcb
+000039b5   enqueue_uart_out
+00004191   exit
+000034af   express_controller
+00000000   g_pfnVectors
+000035ef   get_MSP
+000035e5   get_PSP
+000035dd   get_SP
+000035ad   get_new_proc
+00003ea3   getid
+00003427   hal_server
+2000b360   heap
+00003551   idle_process
+00002b67   init_display
+00003d05   init_mem
+000038b1   k_bind_message
+00003815   k_recv_message
+000037b1   k_send_message
+2000cf50   kcall_list
+00002f39   kprint_diag
+00002ee5   kxmit_spi
+2000cd68   layout
+000033c9   local_controller
+00004249   main
+2000cfe4   main_func_sp
+00003ebb   memcpy
+0000338f   next_section
+00003e8b   nice
+2000cfb8   out_head
+2000bf00   out_queue
+2000cfbc   out_tail
+00003e6d   print
+00003e43   print_diag
+00002ac9   print_sensor
+00003909   print_string
+00002a59   print_switch
+0000376f   recv
+00003543   restore_registers
+2000c300   running
+00003535   save_registers
+2000ce30   sections
+0000373d   send
+00002920   sensors
+00003527   set_MSP
+00003519   set_PSP
+20000000   socket_list
+2000cf08   switches
+00004011   systick_init
+00003e2d   terminate
+2000cfc4   test_recv
+00003299   train_control_init
+2000cf9c   wtr
+2000cfc0   xmit_busy
+00003e09   xmit_spi_pkt
+
+
+GLOBAL SYMBOLS: SORTED BY Symbol Address 
+
+address    name
+--------   ----
+00000000   __TI_static_base__
+00000000   g_pfnVectors
+00000001   __TI_args_main
+00000800   __STACK_SIZE
+00002920   sensors
+00002a08   PORTF_GPIODR_R
+00002a0c   PORTF_GPIODIR_R
+00002a10   PORTF_GPIOIS_R
+00002a14   PORTF_GPIOIEV_R
+00002a18   PORTF_GPIOIM_R
+00002a1c   PORTF_GPIOICR_R
+00002a20   PORTF_GPIOAFSEL_R
+00002a24   PORTF_GPIODEN_R
+00002a28   PORTF_GPIOPCTL_R
+00002a2c   PORTE_GPIODR_R
+00002a30   PORTE_GPIODIR_R
+00002a34   PORTE_GPIOAFSEL_R
+00002a38   PORTE_GPIODEN_R
+00002a3c   PORTE_GPIOPCTL_R
+00002a50   SYSCTL_RCGC1_R
+00002a54   SYSCTL_RCGC2_R
+00002a59   print_switch
+00002ac9   print_sensor
+00002b67   init_display
+00002ca1   display_controller
+00002ee5   kxmit_spi
+00002f39   kprint_diag
+0000312b   Kterminate
+00003153   Krun
+00003175   Kprint
+0000319f   Knice
+000031e7   Kinit
+0000324f   Kgetid
+00003299   train_control_init
+0000338f   next_section
+000033c9   local_controller
+00003427   hal_server
+000034af   express_controller
+00003519   set_PSP
+00003527   set_MSP
+00003535   save_registers
+00003543   restore_registers
+00003551   idle_process
+000035ad   get_new_proc
+000035dd   get_SP
+000035e5   get_PSP
+000035ef   get_MSP
+000035f9   enqueue_pcb
+0000361b   dequeue_pcb
+0000363b   create_proc
+000036ef   assignR7
+000036fb   Kernel_Initialization
+0000373d   send
+0000376f   recv
+000037b1   k_send_message
+00003815   k_recv_message
+000038b1   k_bind_message
+000038e3   bind
+00003909   print_string
+000039b5   enqueue_uart_out
+000039cf   dequeue_uart_out
+000039ed   SetupPIOSC
+000039fd   UART0_Init
+00003a4d   IntEnable
+00003a65   UART0_IntEnable
+00003a71   UART_full_init
+00003aad   WaitSPIBusy
+00003ab7   SPI_Init
+00003b89   SPIDataTransmit
+00003bb9   SPIDataReceive
+00003be9   UART0_IntHandler
+00003c1d   SysTickHandler
+00003c3f   SVCall
+00003c79   SVCHandler
+00003c89   PendSV
+00003ca3   GPIOPortF_IntHandler
+00003d05   init_mem
+00003d75   deallocate
+00003d99   allocate
+00003e09   xmit_spi_pkt
+00003e2d   terminate
+00003e43   print_diag
+00003e6d   print
+00003e8b   nice
+00003ea3   getid
+00003ebb   __aeabi_memcpy
+00003ebb   __aeabi_memcpy4
+00003ebb   __aeabi_memcpy8
+00003ebb   memcpy
+00003f59   __TI_auto_init
+00003fed   SysTickPeriod
+00003ff5   SysTickIntDisable
+00004003   SysTickStart
+00004011   systick_init
+00004025   delay
+00004049   SysTickStop
+00004057   SysTickIntEnable
+0000406d   PORTF_Init
+00004141   copy_in
+00004185   C$$EXIT
+00004189   abort
+00004191   exit
+000041c9   _c_int00
+000041fd   _args_main
+00004215   _register_unlock
+0000421b   _register_lock
+00004223   _nop
+00004229   __TI_zero_init
+0000423b   __TI_decompress_none
+00004249   main
+00004257   ResetISR
+00004263   __TI_decompress_rle24
+00004700   __TI_Handler_Table_Base
+0000470c   __TI_Handler_Table_Limit
+00004718   __TI_CINIT_Base
+00004728   __TI_CINIT_Limit
+20000000   socket_list
+2000b360   heap
+2000bf00   out_queue
+2000c300   running
+2000c304   __stack
+2000c504   __STACK_TOP
+2000cb04   __STACK_END
+2000cb04   diagnostics
+2000cd68   layout
+2000ce30   sections
+2000ceb0   debug_console
+2000cf08   switches
+2000cf50   kcall_list
+2000cf7c   empty_sections
+2000cf9c   wtr
+2000cfb0   PID_count
+2000cfb4   cur_priority
+2000cfb8   out_head
+2000cfbc   out_tail
+2000cfc0   xmit_busy
+2000cfc4   test_recv
+2000cfc8   d_row
+2000cfcc   d_col
+2000cfd0   _lock
+2000cfd4   _unlock
+2000cfd8   __TI_cleanup_ptr
+2000cfdc   __TI_dtors_ptr
+2000cfe0   ToD
+2000cfe4   main_func_sp
+ffffffff   __binit__
+ffffffff   __c_args__
+ffffffff   binit
+UNDEFED    SHT$$INIT_ARRAY$$Base
+UNDEFED    SHT$$INIT_ARRAY$$Limit
+
+[150 symbols]
