@@ -1,0 +1,249 @@
+;	Name : Multiply two registers
+;
+;	Author : Nick Stanwood
+;	Description : 	This is a general test file to make sure the emulator can 
+;			perform a useful task such as multiplying.
+;			takes two values (VAL1 and VAL2) and mutliplies them together
+;			
+;----------------------------------------------------------------------------------- 
+
+
+	ORG $0F20
+	MOV	#SP_INIT,SP	;initialize stack pointer at starting address
+	JMP START
+C_OFF 	EQU	$0010		;	for setting C-off bit in SR
+SP_INIT	EQU	$FFBA		;	start the stack just above the INTR_vect table	
+VAL1	EQU	2
+VAL2	EQU	4
+DST	EQU	$2000	
+
+	ORG	$1000 		;	PC = 0x1000		
+START
+	mov 	#VAL1,R6
+	mov	#VAL2,R7
+	mov	#DST,R8
+	CALL &MULT
+	BIS #16,SR
+	
+MULT	CMP #0,R6
+	JZ MULT_DONE
+	SUB #1,R6
+	ADDC R7,0(R8)
+	JMP MULT
+MULT_DONE
+	MOV @SP+,PC		; pop the program counter
+
+	END $0F20
+
+;	Srecord file:
+;
+;	S1090f203140baff6d3cf4
+;	S12310003640020037400400384000209212141032d01000369000000524368001008867d2
+;	S10910200000f83f30411e
+;	S9030f20FC
+;
+;	OUTPUT:
+
+run with devices? (y/n): n
+run with debugger? (y/n): y
+initialize debugger with which options? ('H' for list) h
+comprehensive list of debugger options in DEBUGGER.txt
+
+[L file filename]       Load file
+[L S1]                  Load S-record
+[I hexval]              Init PC
+[B hexval]              Breakpoint
+[W decval]              Watch
+[A]                     Automatic debugger
+[S]                     S-record dump
+[H]                     help list
+[Q]                     Quit
+
+initialize debugger with which options? w 1
+watch every 1 instruction(s)
+a
+Auto debug enabled
+q
+
+MOV     0xffba , SP
+        SP = 0xffba
+
+        SR = 0x0000
+        PC = 0x0f24
+        clock = 2
+---------------------------------------------
+
+JMP 0x1000
+
+        SR = 0x0000
+        PC = 0x1000
+        clock = 4
+---------------------------------------------
+
+MOV     0x0002 , R6
+        R6 = 0x0002
+
+        SR = 0x0000
+        PC = 0x1004
+        clock = 6
+---------------------------------------------
+
+MOV     0x0004 , R7
+        R7 = 0x0004
+
+        SR = 0x0000
+        PC = 0x1008
+        clock = 8
+---------------------------------------------
+
+MOV     0x2000 , R8
+        R8 = 0x2000
+
+        SR = 0x0000
+        PC = 0x100c
+        clock = 10
+---------------------------------------------
+
+CALL    mem[0x1014]
+        mem[0x1014] = 0x9036
+
+        SR = 0x0000
+        PC = 0x1014
+        clock = 15
+---------------------------------------------
+
+CMP     0x0000 , R6
+        R6 = 0x0002
+
+        SR = 0x0000
+        PC = 0x1018
+        clock = 17
+---------------------------------------------
+
+jump condition not met
+
+        SR = 0x0000
+        PC = 0x101a
+        clock = 19
+---------------------------------------------
+
+SUB     0x0001 , R6
+        R6 = 0x0001
+
+        SR = 0x0000
+        PC = 0x101e
+        clock = 21
+---------------------------------------------
+
+ADDC    0x0004 , mem[0x2000]
+        mem[0x2000] = 0x0004
+        SR = 0x0000
+        PC = 0x1022
+        clock = 25
+---------------------------------------------
+
+JMP 0x1014
+
+        SR = 0x0000
+        PC = 0x1014
+        clock = 27
+---------------------------------------------
+
+CMP     0x0000 , R6
+        R6 = 0x0001
+
+        SR = 0x0000
+        PC = 0x1018
+        clock = 29
+---------------------------------------------
+
+jump condition not met
+
+        SR = 0x0000
+        PC = 0x101a
+        clock = 31
+---------------------------------------------
+
+SUB     0x0001 , R6
+        R6 = 0x0000
+
+        SR = 0x0002
+        PC = 0x101e
+        clock = 33
+---------------------------------------------
+
+ADDC    0x0004 , mem[0x2000]
+        mem[0x2000] = 0x0008
+        SR = 0x0000
+        PC = 0x1022
+        clock = 37
+---------------------------------------------
+
+JMP 0x1014
+
+        SR = 0x0000
+        PC = 0x1014
+        clock = 39
+---------------------------------------------
+
+CMP     0x0000 , R6
+        R6 = 0x0000
+
+        SR = 0x0002
+        PC = 0x1018
+        clock = 41
+---------------------------------------------
+
+JMP 0x1024
+
+        SR = 0x0002
+        PC = 0x1024
+        clock = 43
+---------------------------------------------
+
+MOV     0x1010 , PC
+        PC = 0x1010
+
+        SR = 0x0002
+        PC = 0x1010
+        clock = 45
+---------------------------------------------
+
+BIS     0x0010 , SR
+        SR = 0x0012
+
+        SR = 0x0012
+        PC = 0x1014
+        clock = 47
+---------------------------------------------
+
+r all
+        R0:     0x1014
+        R1:     0xffba
+        R2:     0x0012
+        R3:     0x0000
+        R4:     0x0000
+        R5:     0x0000
+        R6:     0x0000
+        R7:     0x0004
+        R8:     0x2000
+        R9:     0x0000
+        R10:    0x0000
+        R11:    0x0000
+        R12:    0x0000
+        R13:    0x0000
+        R14:    0x0000
+        R15:    0x0000
+m 1ffe 2002
+        |____|
+1ffe -->| 00 |
+        |____|
+1fff -->| 00 |
+        |____|
+2000 -->| 08 |
+        |____|
+2001 -->| 00 |
+        |____|
+2002 -->| 00 |
+
+t

@@ -1,0 +1,67 @@
+				Debugger Initialization Options
+------------------------------------------------------------------------------------
+[L file filename] Load file
+	loads the file specified by filename into mem[]
+				
+[L S1nnnn...] Load S-record
+	loads the S19 record specified in the command window 
+
+[I hexval] Initialize PC
+	initailizes the PC to the value specified by the user
+
+[B hexval] Breakpoint
+	when the PC is equal to the breakpoint it will finish executing its current 
+	instruction if there is one then give control back to the debugger
+ 
+[W decval] Watch
+	The program will execute a number of instructions specified by the user, 
+	after which it will give control back to the debugger. at this time the 
+	debugger will allow any 'Debugger Run Time Options' to be implemented.  
+				
+[A] Automatic debugger
+	prints out the instruction currently being executed and the values it is 
+	using. after the instruction has taken place it prints out the new values 
+	of all relevantregisters and memory locations as well as the number of clock 
+	cycles 
+				
+[S] S-record dump
+	displays S-records as they are being loaded into memory
+	
+[H] Help
+	displays the help list	
+		
+[Q] Quit 
+	quits the debugger initialization menu
+
+
+				Runtime Debugger Options
+------------------------------------------------------------------------------------
+
+[R all] Register dump - all registers
+	displays all registers 
+
+[R decval] Register dump - specific register
+	Displays the register specified by the user
+
+[M Hexval1 Hexval2] Mem Dump
+	displays the memory locations starting at hexval1 and ending at hexval2
+
+[B hexval] Breakpoint
+	when the PC is equal to the breakpoint it will finish executing its current 
+	instruction if there is one then give control back to the debugger. if there 
+	is already a breakpoint this will replace it.
+
+[D]  Device Dump
+	displays all active devices and their status registers
+
+[T]  Terminate
+	stops the program from executing
+
+[H] Help
+	displays the help list
+	
+[ENTER] resume execution
+
+
+
+

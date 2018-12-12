@@ -1,0 +1,144 @@
+;	Name : Jump Conditions
+;
+;	Author : Nick Stanwood
+;	Description : 	This is a test file to ensure the emultaor will only jump 
+;			when the proper condition is met. R10 is incremented everytime
+;			a proper jump happens. by the end of the program R10 should 
+;			equal 0x000E
+;			
+;----------------------------------------------------------------------------------- 
+
+	ORG $0020
+
+	MOV	#SP_INIT,SP	;initialize stack pointer at starting address
+	JMP START
+
+ARRAY	EQU	$2000
+C_OFF 	EQU	$0010		;	for setting C-off bit in SR
+SP_INIT	EQU	$FFBE		;	start the stack just above the INTR_vect table
+TWO	EQU	2		
+ONE 	EQU	1
+	
+	ORG	$0100 		;	PC = 0x0100	
+	
+START	
+	MOV	#7,R7	
+	MOV	#8,R8
+	MOV	#6,R6
+
+	ADD	#1,R10		;	R10 = 1
+	CMP	R6,R6	;		
+	JEQ	EQUAL		;	PC = EQUAL
+	JMP	FIN		; 
+
+EQUAL	
+	ADD	#1,R10 		;	R10 = 2
+	CMP	R7,R6		;	R6 < R7
+	JNE	NOTEQU		;	PC = NOTEQU
+	JMP	FIN		;
+
+NOTEQU	
+	ADD	#1,R10		;	R10 = 3
+	CMP	R7,R6		;	R6 < R7
+	JL	LESS		;	PC = LESS		
+	JMP	FIN		;
+
+LESS	
+	ADD	#1,R10		;	R10 = 4	
+	CMP	R6,R7		;	R7 > R6
+	JGE	GTR_EQU		;	PC = GRTR_EQU 	
+	JMP	FIN		;
+
+GTR_EQU	
+	ADD	#1,R10		;	R10 = 5
+	MOV	#1,R9		
+	ADD	#$FFFF,R9	;	R9 = 0x0000	C = 1	
+	JC	CARRY		;	PC = CARRY
+	JMP	FIN		;		
+		
+CARRY	
+	ADD	#1,R10		;	R10 = 6
+	JNC	NO_CRRY		;	PC = NO_CRRY
+	JMP	FIN		;
+
+NO_CRRY	
+	ADD	#1,R10		;	R10 = 7
+	MOV	#1,R12
+	SUB 	#5,R12
+	JN	NEG		;	PC = NEG
+	JMP	FIN		;
+
+NEG	
+	CMP	R6,R7
+	JEQ	FIN
+	ADD	#1,R10		;	R10 = 8
+	
+	CMP	R6,R6
+	JNE	FIN	
+	ADD	#1,R10		;	R10 = 9
+
+	MOV	#$FFFF,R5
+	ADD	#1,R5
+	JNC	FIN
+	ADD	#1,R10		;	R10 = A
+	
+	ADD	#1,R5
+	JC	FIN
+	ADD	#1,R10		;	R10 = B
+
+	MOV	#0,R5
+	JN	FIN
+	ADD	#1,R10		;	R10 = C
+
+	MOV	#$FFFF,R13
+	CMP	R6,R13		;	R13 < R6   (-1 < 6) 
+	JGE	FIN
+	ADD	#1,R10		;	R10 = D
+
+	CMP	R6,R7
+	JL	FIN
+	ADD	#1,R10		;	R10 = E
+
+	JMP FIN
+
+
+FIN	BIS	#C_OFF,SR	;	R2 = 0x0010
+	
+	END	$0020
+
+	;final values:
+	;R10 = 0x000E
+	;SR  = 0x0010
+
+;	Srecord File:
+	S10900203140beff6d3cff
+	S12301003740070038400800364006003a50010006960124473c3a50010006970120423ccb
+	S12301203a500100069701383d3c3a50010007960134383c3a500100394001003950ffff84
+	S1230140012c303c3a50010001282c3c3a5001003c4001003c8005000130243c07962224a9
+	S12301603a50010006961e203a5001003540ffff3550010017283a50010035500100122c04
+	S12301803a500100354000000d303a5001003d40ffff0d9607343a500100079603383a504d
+	S10b01a00100003c32d0100004
+	S9030020FC
+
+
+;	output:
+	
+r all
+        R0:     0x01a8
+        R1:     0xffbe
+        R2:     0x0010
+        R3:     0x0000
+        R4:     0x0000
+        R5:     0x0000
+        R6:     0x0006
+        R7:     0x0007
+        R8:     0x0008
+        R9:     0x0000
+        R10:    0x000e
+        R11:    0x0000
+        R12:    0xfffc
+        R13:    0xffff
+        R14:    0x0000
+        R15:    0x0000
+
+

@@ -1,0 +1,100 @@
+;	Name : test_clock.txt
+;
+;	Author : Nick Stanwood
+;	Description :	This test ensures that the clock is increasing by the 
+;			correct amount for each instruction performed
+;
+;----------------------------------------------------------------------------------- 
+
+	ORG $0F80
+	JMP START			; clk + 2		clk = 2
+addr	EQU	$2000			;
+val 	EQU	42
+SP_init EQU	$FFBE			;	
+	ORG $1000			;
+START					;
+	MOV 	R5,R4			; clk + 1		clk = 3
+	ADD 	R5,addr(R4)		; clk + 4		clk = 7
+	ADDC 	R5,addr			; clk + 4		clk = 11
+	SUBC	R5,&addr		; clk + 4		clk = 15
+	CMP	@R5,R4			; clk + 2		clk = 17
+	ADD	@R5,addr(R4)		; clk + 5		clk = 22
+	BIT	@R5,addr		; clk + 5		clk = 27
+	BIC	@R5,&addr		; clk + 5		clk = 32
+	BIS	@R5+,R4			; clk + 2		clk = 34
+	XOR	@R5+,addr(R4)		; clk + 5		clk = 39
+	AND	@R5+,addr		; clk + 5		clk = 44
+	MOV	@R5+,&addr		; clk + 5		clk = 49
+	MOV	#SP_init,SP		; clk + 2		clk = 51
+	ADDC	#val,addr(R4)		; clk + 5		clk = 56
+	SUBC	#val,addr		; clk + 5		clk = 61
+	CMP	#val,&addr		; clk + 5		clk = 66
+	ADD	addr(R5),R4		; clk + 3		clk = 69
+	BIT	addr(R5),addr(R4)	; clk + 6		clk = 75
+	BIC	addr(R5),addr		; clk + 6		clk = 81
+	BIS	addr(R5),&addr		; clk + 6		clk = 87
+	XOR	addr,R4			; clk + 3		clk = 90
+	AND	addr,addr(R4)		; clk + 6		clk = 96
+	ADD	addr,addr		; clk + 6		clk = 102
+	ADDC	addr,&addr		; clk + 6		clk = 108
+	SUBC	&addr,R4		; clk + 3		clk = 111
+	CMP	&addr,addr(R4)		; clk + 6		clk = 117
+	ADD	&addr,addr		; clk + 6		clk = 123
+	BIT	&addr,&addr		; clk + 6		clk = 129
+
+	RRC 	R5			; clk + 1		clk = 130
+	SWPB	@R4			; clk + 3		clk = 133
+	RRA	@R4+			; clk + 3		clk = 136
+	SXT	addr(R5)		; clk + 4		clk = 140
+	RRC	addr			; clk + 4		clk = 144
+	SWPB	&addr			; clk + 4		clk = 148
+
+	PUSH	R5			; clk + 3		clk = 151
+	PUSH	@R5			; clk + 4		clk = 155
+	PUSH	@R5+			; clk + 5		clk = 160
+  	PUSH	#val			; clk + 4		clk = 164
+	PUSH	addr(R5)		; clk + 5		clk = 169
+	PUSH	addr			; clk + 5		clk = 174
+	PUSH	&addr			; clk + 5		clk = 179
+
+
+	BIS	#16,SR			; clk + 2		clk = 181
+	END $0F80
+
+; final clock value = 181
+
+;	Srecord File:
+	S1050f803f3cf0
+	S12310000445845500208065f60f827500202495a4550020a0b5e80fa2c5002034d5b4e542
+	S12310200020b0f5da0fb24500203140beffb4602a000020b0702a00c60fb2902a000020b0
+	S12310401455002094b50020002090c50020b00f92d50020002014e0a60f94f0a20f0020a1
+	S123106090509c0f9a0f9260960f00201472002094920020002090520020840f92b200207c
+	S123108000200510a4103411951100201010700f9210002005122512351230122a001512cf
+	S11110a0002010125a0f1212002032d010003d
+	S9030f80FC
+
+
+;	Output File:
+
+
+---------------------------------------------
+
+PUSH    mem[0x2000]
+        mem[0x2000] = 0x0000
+
+        SR = 0x0002
+        PC = 0x10aa
+        clock = 179
+---------------------------------------------
+
+BIS     0x0010 , SR
+        SR = 0x0012
+
+        SR = 0x0012
+        PC = 0x10ae
+        clock = 181
+---------------------------------------------
+
+
+
+

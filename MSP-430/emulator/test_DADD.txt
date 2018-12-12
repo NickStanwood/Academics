@@ -1,0 +1,90 @@
+; 	Name : DADD instruction Test
+
+;	Author : Nick Stanwood
+;	Description : 	This is a test file to ensure the DADD insturction is 
+;			working properly 
+;
+;			
+;----------------------------------------------------------------------------------- 
+	ORG $0020
+
+	MOV	#SP_INIT,SP	;initialize stack pointer at starting address
+	JMP START
+
+ARRAY	EQU	$2000
+C_OFF 	EQU	$0010		;	for setting C-off bit in SR
+SP_INIT	EQU	$FFBE		;	start the stack just above the INTR_vect table
+TWO	EQU	2		
+ONE 	EQU	1
+	
+	ORG	$0100 		;	PC = 0x0100	
+	
+START	
+	MOV #$9999,R6
+	MOV #$FFFF,R7
+	DADD R6,R6		;	R6 = 0x9998 (C = 1)
+	DADD R6,R7		;	error
+
+	END	$0020
+
+
+;	Srecord File:
+;
+	S10900203140beff6d3cff
+	S10f0100364099993740ffff06a607a679
+	S9030020FC
+
+	Output File:
+
+run with devices? (y/n): n
+run with debugger? (y/n): y
+initialize debugger with which options? ('H' for list) W 1
+watch every 1 instruction(s)
+A
+Auto debug enabled
+Q
+MOV     0xffbe , SP
+        SP = 0xffbe
+
+        SR = 0x0000
+        PC = 0x0024
+        clock = 2
+---------------------------------------------
+
+JMP 0x0100
+
+        SR = 0x0000
+        PC = 0x0100
+        clock = 4
+---------------------------------------------
+
+MOV     0x9999 , R6
+        R6 = 0x9999
+
+        SR = 0x0000
+        PC = 0x0104
+        clock = 6
+---------------------------------------------
+
+MOV     0xffff , R7
+        R7 = 0xffff
+
+        SR = 0x0000
+        PC = 0x0108
+        clock = 8
+---------------------------------------------
+
+DADD    0x9999 , R6
+        R6 = 0x9998
+
+        SR = 0x0005
+        PC = 0x010a
+        clock = 9
+---------------------------------------------
+
+instruction fault
+
+        SR = 0x0005
+        PC = 0xffbc
+        clock = 10
+---------------------------------------------

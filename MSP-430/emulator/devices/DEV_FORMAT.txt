@@ -1,0 +1,36 @@
+				DEVICE FILE FORMAT
+------------------------------------------------------------------------------------
+
+
+[0x0000-0x001E]		;	defines the port that the device is attached to
+			;	must be an even address
+
+[0x0000-0xFF0F]		;	defines the initial Status register for the device
+			;	This is where the device would be declared as an 
+			;	input or output. This can also be used to create an 
+			;	interrupt at time 0 if the DBA bit is set initially
+
+[0 - sizeof(long)]	;	the time of interrupt of the device. when the system 
+			;	clock is equal to this value the DEV SR will be set 
+			;	to the following value. The interrupt will take 
+			;	place after the current instruction is finished 
+			;	executing on the CPU.
+
+[0x0000-0xFF0F]		;	when the system clock equals the interrupt time the 
+			;	devices Status Register is set to this value. to 
+			;	ensure the device's interrupt is handled the DBA bit 
+			;	must be set here.
+
+
+				SAMPLE DEVICE FILE 
+------------------------------------------------------------------------------------
+
+0x0000	; port #
+0x0003	; Interrupt enabled, set as input
+
+7	; Time of first interrupt at sys_clock >= 7
+0xFF07	; buffer data of 0xFF , DBA set, set as input, interrupt enabled
+
+12	; Time of second interrupt at sys_clock >= 12
+0x0F07	; buffer data of 0x0F , DBA set, set as input , interrupt enabled
+				
