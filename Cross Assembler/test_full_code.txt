@@ -1,0 +1,163 @@
+;test_full_code.txt
+;this test is meant to run through the first and second pass without any errors
+; 			
+		
+LABEL2	EQU	17		
+LABEL	EQU 	$35			
+ADDR	EQU	$2000			;ADDR decimal val 8192
+
+	ORG	$500
+INDRCT	
+	MOV	@R2,R4		
+	SWPB 	@R4+					
+	mov	@R3+,R13		
+	add	@R5,&LABEL			
+	add	@R7+,R3			
+	ADD	@R10+,&ABS		
+	ADDC	@R11,R5
+
+	ORG $1000		
+	
+IMM	add	#IMM1,R12		;IMM1 and IMM put into ST
+	ADD	#425,ADDR(R3)	
+	add	#LABEL,R14
+	sub 	#R3,LABEL	
+	add	#$FF,R13
+	add	#42,R14	
+
+	ORG $1500
+ABS	
+	add	&LABEL,R2		
+	mov	&ADDR,R3
+	sub 	&ADDR2,R4		;ADDR2 put into ST
+	sub	&ADDR2,&ADDR	
+
+	ORG $2000
+ALPHA	MOV	LABEL,LABEL4		;LABEL4 put into ST
+	ADD	$12(R3),LABEL4(R2)	
+	ADD	ADDR(R1),0(R2)		
+	ADD	$FF(R1),LABEL2	
+	MOV	IND(R4),R2		;IND put into ST
+	mov	0(R11),A22(R3)		;shouldnt be error here but there is
+	mov	R22,ADDR(R12)		;src: RELATIVE , dst: INDEXED (R22 put into ST)
+	
+	R22 	EQU	22
+LABEL4	EQU	$1002
+ADDR2	EQU	$2006
+A22	EQU	14
+IMM1	EQU	57
+IND	EQU	69
+
+
+		END
+
+;output file
+;
+
+0000|	
+0000|	
+0000|	
+0000|	
+0000|	LABEL2	EQU
+0000|	LABEL	EQU
+0000|	ADDR	EQU
+0000|	
+0000|		ORG
+0500|	INDRCT
+0500|		MOV	R2[ind]	R4[dir]
+0502|		SWPB	R4[ind+]
+0504|		MOV	R3[ind+]	R13[dir]
+0506|		ADD	R5[ind]	LABEL[abs]
+050a|		ADD	R7[ind+]	R3[dir]
+050c|		ADD	R10[ind+]	ABS[abs]
+0510|		ADDC	R11[ind]	R5[dir]
+0512|	
+0512|		ORG
+1000|	
+1000|	IMM	ADD	IMM1[imm]	R12[dir]
+1004|		ADD	425[imm]	ADDR(3)
+100a|		ADD	LABEL[imm]	R14[dir]
+100e|		SUB	R3[imm]	LABEL[rel]
+1014|		ADD	$FF[imm]	R13[dir]
+1018|		ADD	42[imm]	R14[dir]
+101c|	
+101c|		ORG
+1500|	ABS
+1500|		ADD	LABEL[abs]	R2[dir]
+1504|		MOV	ADDR[abs]	R3[dir]
+1508|		SUB	ADDR2[abs]	R4[dir]
+150c|		SUB	ADDR2[abs]	ADDR[abs]
+1512|	
+1512|		ORG
+2000|	ALPHA	MOV	LABEL[rel]	LABEL4[rel]
+2006|		ADD	$12(3)	LABEL4(2)
+200c|		ADD	ADDR(1)	0(2)
+2012|		ADD	$FF(1)	LABEL2[rel]
+2018|		MOV	IND(4)	R2[dir]
+201c|		MOV	0(11)	A22(3)
+2022|		MOV	R22[rel]	ADDR(12)
+2028|	
+2028|	R22	EQU
+2028|	LABEL4	EQU
+2028|	ADDR2	EQU
+2028|	A22	EQU
+2028|	IMM1	EQU
+2028|	IND	EQU
+2028|	
+2028|	
+2028|		END
+
+
+	Symbol	|	Value	|	Type	|
+
+	R22	|	22	|	1	|
+	A22	|	14	|	1	|
+	IND	|	69	|	1	|
+	0	|	0	|	2	|
+	$12	|	18	|	2	|
+	LABEL4	|	4098	|	1	|
+	ALPHA	|	8192	|	1	|
+	ADDR2	|	8198	|	1	|
+	42	|	42	|	2	|
+	$FF	|	255	|	2	|
+	425	|	425	|	2	|
+	IMM1	|	57	|	1	|
+	IMM	|	4096	|	1	|
+	ABS	|	5376	|	1	|
+	INDRCT	|	1280	|	1	|
+	ADDR	|	8192	|	1	|
+	LABEL	|	53	|	1	|
+	LABEL2	|	17	|	1	|
+	R15	|	15	|	0	|
+	R14	|	14	|	0	|
+	R13	|	13	|	0	|
+	R12	|	12	|	0	|
+	R11	|	11	|	0	|
+	R10	|	10	|	0	|
+	R9	|	9	|	0	|
+	R8	|	8	|	0	|
+	R7	|	7	|	0	|
+	R6	|	6	|	0	|
+	R5	|	5	|	0	|
+	R4	|	4	|	0	|
+	CG2	|	3	|	0	|
+	R3	|	3	|	0	|
+	CG1	|	2	|	0	|
+	SR	|	2	|	0	|
+	R2	|	2	|	0	|
+	SP	|	1	|	0	|
+	R1	|	1	|	0	|
+	PC	|	0	|	0	|
+	R0	|	0	|	0	|
+
+
+S11505002442b4103d43a25535003357b25a0015256bd4
+S11f10003c503900b350a901f60f3e503500b080030021f03d50ff003e502a000e
+S1151500125235001342002014820620928206200020b1
+S1232000904031e0fcef925308e0f6ef9251f0ffeedf9051e9e0f9df124429e0934be0df21
+S10b2020ecdf9c40f0dfd8ff67
+S9030000FC
+
+
+
+	

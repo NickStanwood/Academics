@@ -1,0 +1,47 @@
+;Stest_srec.txt
+
+;A small program that checks if the values of the S-record are correct
+;I went through each line and manually checked what the values of the Srecord
+;should be
+;----------------------------------------------------------------------------------- 
+
+	MOV	#SP_INIT,SP	;initialize stack pointer at starting address
+	JMP START
+ARRAY	EQU	$2000
+C_OFF 	EQU	$0010		;	for settign C-off bit in SR
+SP_INIT	EQU	$FFBE		;	start the stack just above the INTR_vect table	
+
+	ORG	$0100 		;	PC = 0x0100		
+START
+	BIS	#2,R4		;	R4 = 0000 0000 0000 0010	0x0002
+	RRA 	R4		;	R4 = 0000 0000 0000 0001	0x0001
+	MOV 	#$FE00,R5	;	R5 = 1111 1110 0000 0000	0xFE00
+	SWPB	R5		;	R5 = 0000 0000 1111 1110  	0x00FE
+	XOR	R4,R5		;	R5 = 0000 0000 1111 1111	0x00FF
+	ADD	R5,R4		;	R4 = 0000 0001 0000 0000	0x0100
+
+	MOV	#2,R7		;	R7 = 0000 0000 0000 0010	0x0002
+	ADD	ARRAY(R7),R5	;	R5 = 0000 0001 1111 1111	0x02FF
+	ADD	#2,R7		; 	R7 = 0000 0000 0000 0100	0x0004
+	ADD	ARRAY(R7),R5	;	R5 = 0000 0011 1111 1111	0x05FF
+	ADD	#2,R7		;	R7 = 0000 0000 0000 0011	0x0006
+	SUB	ARRAY(R7),R5	;	R5 = 0000 0000 1111 1111	0x01FF
+
+	BIS	#C_OFF,SR	;	R2 = 0000 0000 0001 0000
+
+	ORG	$2000
+	WORD	$100		;	$2000 --> | $0100 |	
+	WORD	$200		;	$2002 --> | $0200 |
+	WORD	$300		;	$2004 --> | $0300 |
+	WORD	$400		;	$2006 --> | $0400 |
+	
+	END
+
+	;final values:
+	;	R4 = 0x0100
+	;	R5 = 0x00FF
+	;	R7 = 0x0003
+;output file
+;
+
+

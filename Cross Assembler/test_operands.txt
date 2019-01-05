@@ -1,0 +1,157 @@
+;test_operands.txt
+;this test is supposed to have a lot of errors
+;seeing what works by checking what doesnt 
+
+	ORG	$1000 		;LC = 0x1000
+
+LABEL	EQU 	42		
+LABEL2	EQU	17		
+LABEL	EQU 	35			;error second entry of label LABEL
+ADDR	EQU	$2000			;ADDR decimal val 8192
+_lbl	equ	99			
+!lbl	equ	52			;error bad label name
+1LBL	equ	43			;error bad  label name
+	
+INDRCT	
+	MOV	@1,R4			;error 1 not of type REGISTER 
+	SWPB 	@R4++			;error R4+ not of TYPE REGISTER		
+	mov	@R3+,R17		
+	add	@R7,@R6+		;error bad dst mode
+	add	R7,@R3			;error bad dst mode	
+	ADD	@LABEL+,R12		;error LABEL not of type REGISTER
+	ADDC	@LABEL3,R5		;error LABEL3 not of type REGISTER	
+	
+IMM	add	#IMM1,R12		;IMM1 and IMM put into ST
+	ADD	#425,#231		;error bad dst mode
+	add	#LABEL, R14		;works with spaces after ','
+	sub 	#R3 ,LABEL		;error space before ','	
+	add	#$FF,R13
+	add	#42,R14	
+
+ABS	
+	add	&22,R2			;error 22 incorrect label format
+	mov	&ADDR,R3
+	sub 	&ADDR2,R4		;ADD2 put into ST
+	sub	&ADD2,&ADDR?		;error dst incorrect label format	
+
+ALPHA	MOV	LABEL,LABEL4		;LABEL4 put into ST
+	ADD	R5,LABEL
+	ADD	ADDR(R1),0(R2)))	;error dst incorrect label format 
+	ADD	$FF(R1),LABEL2	
+	MOV	IND(R4),R2		;IND put into ST
+	mov	0((R11),LABEL		;error src incorrect label format
+	mov	R22,R12		
+	END	
+	
+;output file
+;
+;		
+
+0000|	
+0000|	
+0000|	
+0000|	
+0000|		ORG
+1000|	
+1000|	LABEL	EQU
+1000|	LABEL2	EQU
+1000|	[ERROR] LABEL already defined
+1000|	[ERROR] Incorrect value for EQU
+1000|	ADDR	EQU
+1000|	_lbl	EQU
+1000|	[ERROR] !lbl not alphanumeric
+1000|	[ERROR] 1LBL must have alphabetic 1st character
+1000|	
+1000|	INDRCT
+1000|	[ERROR] >>@1<< has bad addressing mode
+1002|	[ERROR] >>@R4++<< has bad addressing mode
+1004|		MOV	R3[ind+]	R17[rel]
+1008|	[ERROR] Destination has bad addressing mode
+100a|	[ERROR] Destination has bad addressing mode
+100c|	[ERROR] >>@LABEL<< has bad addressing mode
+100e|	[ERROR] >>@LABEL3<< has bad addressing mode
+1010|	
+1010|	IMM	ADD	IMM1[imm]	R12[dir]
+1018|	[ERROR] Destination has bad addressing mode
+101a|		ADD	LABEL[imm]	R14[dir]
+101e|	[ERROR] >>#R3 << has bad addressing mode
+1022|		ADD	$FF[imm]	R13[dir]
+1026|		ADD	42[imm]	R14[dir]
+102a|	
+102a|	ABS
+102a|	[ERROR] >>&22<< has bad addressing mode
+102c|		MOV	ADDR[abs]	R3[dir]
+1030|		SUB	ADDR2[abs]	R4[dir]
+1036|	[ERROR] Destination has bad addressing mode
+1038|	
+1038|	ALPHA	MOV	LABEL[rel]	LABEL4[rel]
+103e|		ADD	R5[dir]		LABEL[rel]
+1044|	[ERROR] Destination has bad addressing mode
+1046|		ADD	$FF(1)	LABEL2[rel]
+104c|		MOV	IND(4)	R2[dir]
+1050|	[ERROR] >>0<< has bad addressing mode
+1054|		MOV	R22[rel]	R12[dir]
+1058|		END
+
+
+	Symbol	|	Value	|	Type	|
+
+	R22	|	42	|	3	|
+	IND	|	42	|	3	|
+	0	|	0	|	2	|
+	LABEL4	|	42	|	3	|
+	ALPHA	|	4152	|	1	|
+	ADD2	|	42	|	3	|
+	ADDR2	|	42	|	3	|
+	ABS	|	4138	|	1	|
+	42	|	42	|	2	|
+	$FF	|	255	|	2	|
+	R3 	|	0	|	3	|
+	231	|	231	|	2	|
+	425	|	425	|	2	|
+	IMM1	|	0	|	3	|
+	IMM	|	4112	|	1	|
+	R17	|	42	|	3	|
+	INDRCT	|	4096	|	1	|
+	_lbl	|	99	|	1	|
+	ADDR	|	8192	|	1	|
+	LABEL2	|	17	|	1	|
+	LABEL	|	42	|	1	|
+	R15	|	15	|	0	|
+	R14	|	14	|	0	|
+	R13	|	13	|	0	|
+	R12	|	12	|	0	|
+	R11	|	11	|	0	|
+	R10	|	10	|	0	|
+	R9	|	9	|	0	|
+	R8	|	8	|	0	|
+	R7	|	7	|	0	|
+	R6	|	6	|	0	|
+	R5	|	5	|	0	|
+	R4	|	4	|	0	|
+	CG2	|	3	|	0	|
+	R3	|	3	|	0	|
+	CG1	|	2	|	0	|
+	SR	|	2	|	0	|
+	R2	|	2	|	0	|
+	SP	|	1	|	0	|
+	R1	|	1	|	0	|
+	PC	|	0	|	0	|
+	R0	|	0	|	0	|
+
+
+	[ERROR] R22 used but not declared
+	[ERROR] IND used but not declared
+	[ERROR] LABEL4 used but not declared
+	[ERROR] ADD2 used but not declared
+	[ERROR] ADDR2 used but not declared
+	[ERROR] R3  used but not declared
+	[ERROR] IMM1 used but not declared
+	[ERROR] R17 used but not declared
+	[ERROR] One or more errors found second pass not executed
+	
+
+
+
+
+	

@@ -1,0 +1,105 @@
+;test_directive.txt
+;
+;This code is meant to test the limitations of the directives
+;
+;
+;
+	DATA EQU 39
+	ADDR EQU $4000
+
+	ORG $3000
+START
+	BSS	39				;
+	BSS 	-12				;cant have negative BSS values
+	BSS	654000203
+	BSS	65538				; cant have BSS values larger than 65535
+	BSS	$FFFF				;cant have value larger than the remaining 
+	ASCII	"unfinished quot-		;no end quotation
+	bYTE	-3
+	BYTE	$F1
+	WORD	$72
+	
+	ORG	$2000
+
+	ASCII "finished quote"
+	ASCII	"the quick brown fox jumped over the lazy dog the quick brown fox jumped over the lazy dog the quick brown fox jumped over the lazy dog the quick brown fox jumped over the lazy dog the quick brown fox jumped over the lazy dog the quick brown fox jumped over the lazy dog"
+	;string is too long, shouldnt work
+	ALIGN
+	ALIGN	45	;shouldnt have a value with ALIGN		
+	ALIGN
+	ALIGN
+	WORD 	65474739302	;much too big
+	WORD
+	EQU 	0		;no label for EQU
+
+	END	$2424	;shouldnt pick up the value
+; test results
+;NOTE:
+	strange symbol added to the symbol table -
+	"mped" with value 8453 from attempting to read the next line of the ASCII string that is too 	long. came from the word "jumped"
+0000|	
+0000|	
+0000|	
+0000|	
+0000|	
+0000|	
+0000|	DATA	EQU
+0000|	ADDR	EQU
+0000|	
+0000|		ORG
+3000|	START
+3000|		BSS
+3027|	[ERROR] Incorrect value for BSS
+3027|	[ERROR] Incorrect value for BSS
+3027|	[ERROR] Incorrect value for BSS
+3027|	[ERROR] hex value too large for BSS
+3027|	[ERROR] Incorrect string
+3038|		BYTE
+3039|		BYTE
+303a|		WORD
+303c|	
+303c|		ORG
+2000|	
+2000|		ASCII
+200e|	[ERROR] Incorrect string
+2105|	[ERROR]Too many labels on line
+2105|	
+2105|		ALIGN
+2106|	[ERROR] Too many arguments for directive
+2106|		ALIGN
+2106|		ALIGN
+2106|	[ERROR]Incorrect value for WORD
+2106|	[ERROR]no value found for WORD
+2106|	[ERROR] Incorrect value for EQU
+2106|	
+2106|		END
+
+
+	Symbol	|	Value	|	Type	|
+
+	mped	|	8453	|	1	|
+	START	|	12288	|	1	|
+	ADDR	|	16384	|	1	|
+	DATA	|	39	|	1	|
+	R15	|	15	|	0	|
+	R14	|	14	|	0	|
+	R13	|	13	|	0	|
+	R12	|	12	|	0	|
+	R11	|	11	|	0	|
+	R10	|	10	|	0	|
+	R9	|	9	|	0	|
+	R8	|	8	|	0	|
+	R7	|	7	|	0	|
+	R6	|	6	|	0	|
+	R5	|	5	|	0	|
+	R4	|	4	|	0	|
+	CG2	|	3	|	0	|
+	R3	|	3	|	0	|
+	CG1	|	2	|	0	|
+	SR	|	2	|	0	|
+	R2	|	2	|	0	|
+	SP	|	1	|	0	|
+	R1	|	1	|	0	|
+	PC	|	0	|	0	|
+	R0	|	0	|	0	|
+	[ERROR] One or more errors found second pass not executed

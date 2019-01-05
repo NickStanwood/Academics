@@ -1,0 +1,101 @@
+;test_LC.txt
+;this test is meant to see if the LC is incrementing by the proper amount every record
+;
+
+
+
+	ORG	$1000 		;LC = 0x1000
+	MOV	#1,R4 		;LC + 4
+	SWPB R4			;LC + 2 
+LABEL	EQU 	42		;LC + 0
+Loop	add	@R7,INDEX(R7)	;LC + 4
+	ADD	INDEX(R5),R12	;LC + 4
+	ADDC	&ADDR,R5	;LC + 4
+;
+	ASCII	"0123456789"	;LC + 10
+	BYTE	4		;LC + 1
+	ALIGN			;LC + 1
+	ALIGN			;LC + 0
+	BSS	8		;LC + 8
+	WORD	1024		;LC + 2
+
+	org	$2000		;LC = 0x2000
+Data	bss	4		;LC + 4
+
+LOOP1	subc.B	@R10,0(R12)	;LC + 4 
+
+;	
+	END
+
+	MOV	R5 , 0(R7)	; shouldnt read this one
+
+
+;output file
+;
+
+0000|	
+0000|	
+0000|	
+0000|	
+0000|	
+0000|	
+0000|		ORG
+1000|		MOV	1[imm]	R4[dir]
+1004|		SWPB	R4[dir]	
+1006|	LABEL	EQU
+1006|	Loop	ADD	R7[ind]	INDEX(0)
+100a|		ADD	INDEX(5)	R12[dir]
+100e|		ADDC	ADDR[abs]	R5[dir]
+1012|	
+1012|		ASCII
+101c|		BYTE
+101d|		ALIGN
+101e|		ALIGN
+101e|		BSS
+1026|		WORD
+1028|	
+1028|		ORG
+2000|	Data	BSS
+2004|	
+2004|	LOOP1	SUBC.B	R10[ind]	0(0)
+2008|	
+2008|	
+2008|		END
+
+
+	Symbol	|	Value	|	Type	|
+
+	0	|	0	|	2	|
+	LOOP1	|	8196	|	1	|
+	Data	|	8192	|	1	|
+	ADDR	|	42	|	3	|
+	INDEX	|	42	|	3	|
+	Loop	|	4102	|	1	|
+	LABEL	|	42	|	1	|
+	1	|	1	|	2	|
+	R15	|	15	|	0	|
+	R14	|	14	|	0	|
+	R13	|	13	|	0	|
+	R12	|	12	|	0	|
+	R11	|	11	|	0	|
+	R10	|	10	|	0	|
+	R9	|	9	|	0	|
+	R8	|	8	|	0	|
+	R7	|	7	|	0	|
+	R6	|	6	|	0	|
+	R5	|	5	|	0	|
+	R4	|	4	|	0	|
+	CG2	|	3	|	0	|
+	R3	|	3	|	0	|
+	CG1	|	2	|	0	|
+	SR	|	2	|	0	|
+	R2	|	2	|	0	|
+	SP	|	1	|	0	|
+	R1	|	1	|	0	|
+	PC	|	0	|	0	|
+	R0	|	0	|	0	|
+
+
+	[ERROR] ADDR used but not declared
+	[ERROR] INDEX used but not declared
+	[ERROR] One or more errors found second pass not executed
